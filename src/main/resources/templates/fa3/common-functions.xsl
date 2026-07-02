@@ -61,4 +61,9 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:function>
+
+    <xsl:function name="local:distinctDecimalCount" as="xsd:integer">
+        <xsl:param name="values"/>
+        <xsl:sequence select="count(distinct-values(for $v in $values return xsd:decimal($v)))"/>
+    </xsl:function>
 </xsl:stylesheet>

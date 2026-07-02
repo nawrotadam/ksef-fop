@@ -33,7 +33,7 @@
     <xsl:template name="positionsTable">
         <xsl:param name="faWiersz"/>
 
-        <xsl:variable name="exchangeRatesVary" select="count(distinct-values($faWiersz/crd:KursWaluty)) > 1"/>
+        <xsl:variable name="exchangeRatesVary" select="local:distinctDecimalCount($faWiersz/crd:KursWaluty) > 1"/>
 
         <!-- Calculate column width for name based on presence of other columns -->
         <!-- Fixed columns: Lp (4%), Quantity (8%), Unit (5%) = 17% -->
@@ -245,7 +245,7 @@
         <xsl:param name="showP11" select="boolean(//crd:FaWiersz/crd:P_11)" tunnel="yes"/>
         <xsl:param name="showP11Vat" select="boolean(//crd:FaWiersz/crd:P_11Vat)" tunnel="yes"/>
         <xsl:param name="showP11A" select="boolean(//crd:FaWiersz/crd:P_11A)" tunnel="yes"/>
-        <xsl:param name="showExchangeRate" select="count(distinct-values(//crd:FaWiersz/crd:KursWaluty)) > 1" tunnel="yes"/>
+        <xsl:param name="showExchangeRate" select="local:distinctDecimalCount(//crd:FaWiersz/crd:KursWaluty) > 1" tunnel="yes"/>
         <fo:table-row>
             <fo:table-cell xsl:use-attribute-sets="tableFont tableBorder table.cell.padding" text-align="left">
                 <fo:block>
