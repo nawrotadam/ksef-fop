@@ -1,0 +1,59 @@
+package io.alapierre.ksef.fop;
+
+import org.junit.jupiter.api.Test;
+import org.w3c.dom.Node;
+import java.net.URL;
+
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+class ExchangeRateTest extends AbstractStyleSheetTest {
+
+    private static final String INVOICE_XPATH = "/fa3:Faktura";
+    private static final String EXCHANGE_RATE_HEADER_XPATH = "//fo:block[@id='exchangeRate']";
+    private static final String EXCHANGE_RATE_NOTE_HEADER_XPATH = "//fo:block[@id='exchangeRateCommonNote']";
+    private static final String FIRST_ROW_XPATH = "(//fo:table-cell[starts-with(@id,'lineExchangeRate')])[1]";
+    private static final String SECOND_ROW_XPATH = "(//fo:table-cell[starts-with(@id,'lineExchangeRate')])[2]";
+
+    @Test
+    void shouldCorrectlyDisplayDifferentLineRatesForVatInvoice() throws Exception {
+        URL input = resource("ExchangeRateTest/vat_different_rates_in_rows.xml");
+
+        String firstRowExpectedRate = "4.3200";
+        String secondRowExpectedRate = "4.500";
+
+        Node exchangeRateHeader = transformFa3Invoice(input, INVOICE_XPATH, EXCHANGE_RATE_HEADER_XPATH);
+        Node exchangeRateNoteHeader = transformFa3Invoice(input, INVOICE_XPATH, EXCHANGE_RATE_NOTE_HEADER_XPATH);
+        Node firstRow = transformFa3Invoice(input, INVOICE_XPATH, FIRST_ROW_XPATH);
+        Node secondRow = transformFa3Invoice(input, INVOICE_XPATH, SECOND_ROW_XPATH);
+
+        assertNull(exchangeRateNoteHeader, "Exchange rate header note should not be visible if rows have different rates");
+        assertNull(exchangeRateHeader, "Exchange rate header should not be visible if rows have different rates");
+        assertTrue(firstRow.getTextContent().contains(firstRowExpectedRate),
+                () -> "Expected line 1 exchange rate " + firstRowExpectedRate + " but got: " + firstRow.getTextContent());
+        assertTrue(secondRow.getTextContent().contains(secondRowExpectedRate),
+                () -> "Expected line 2 exchange rate " + secondRowExpectedRate + " but got: " + secondRow.getTextContent());
+    }
+
+    @Test
+    void shouldCorrectlyDisplaySameLineRatesForVatInvoice() throws Exception {
+        URL input = resource("ExchangeRateTest/vat_same_rates_in_rows.xml");
+
+        String firstRowExpectedRate = "4.3200";
+        String commonRateExpectedNote = "Kurs waluty wspólny dla wszystkich wierszy faktury";
+
+        Node exchangeRateHeader = transformFa3Invoice(input, INVOICE_XPATH, EXCHANGE_RATE_HEADER_XPATH);
+        Node exchangeRateNoteHeader = transformFa3Invoice(input, INVOICE_XPATH, EXCHANGE_RATE_NOTE_HEADER_XPATH);
+        Node firstRow = transformFa3Invoice(input, INVOICE_XPATH, FIRST_ROW_XPATH);
+
+        assertNotNull(exchangeRateNoteHeader, "Exchange rate header should be visible if rows have equal rates");
+        assertTrue(exchangeRateHeader.getTextContent().contains(firstRowExpectedRate),
+                () -> "Expected common exchange rate " + firstRowExpectedRate
+                        + " but got: " + exchangeRateHeader.getTextContent());
+
+        assertTrue(exchangeRateNoteHeader.getTextContent().contains(commonRateExpectedNote),
+                () -> "Expected common exchange rate note but got: " + exchangeRateNoteHeader.getTextContent());
+        assertNull(firstRow, "Per-line exchange rate column must not be shown when all line rates are equal");
+    }
+}
