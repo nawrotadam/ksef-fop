@@ -28,8 +28,8 @@ class ExchangeRateTest extends AbstractStyleSheetTest {
         Node firstRow = transformFa3Invoice(input, INVOICE_XPATH, FIRST_ROW_XPATH);
         Node secondRow = transformFa3Invoice(input, INVOICE_XPATH, SECOND_ROW_XPATH);
 
-        assertNull(exchangeRateNoteHeader, "Exchange rate header note should not be visible if rows have different rates");
-        assertNull(exchangeRateHeader, "Exchange rate header should not be visible if rows have different rates");
+        assertNull(exchangeRateNoteHeader, "Exchange rate header note should not be visible when rows have different rates");
+        assertNull(exchangeRateHeader, "Exchange rate header should not be visible when rows have different rates");
         assertTrue(firstRow.getTextContent().contains(firstRowExpectedRate),
                 () -> "Expected line 1 exchange rate " + firstRowExpectedRate + " but got: " + firstRow.getTextContent());
         assertTrue(secondRow.getTextContent().contains(secondRowExpectedRate),
@@ -47,7 +47,7 @@ class ExchangeRateTest extends AbstractStyleSheetTest {
         Node exchangeRateNoteHeader = transformFa3Invoice(input, INVOICE_XPATH, EXCHANGE_RATE_NOTE_HEADER_XPATH);
         Node firstRow = transformFa3Invoice(input, INVOICE_XPATH, FIRST_ROW_XPATH);
 
-        assertNotNull(exchangeRateNoteHeader, "Exchange rate header should be visible if rows have equal rates");
+        assertNotNull(exchangeRateNoteHeader, "Exchange rate header should be visible when rows have equal rates");
         assertTrue(exchangeRateHeader.getTextContent().contains(firstRowExpectedRate),
                 () -> "Expected common exchange rate " + firstRowExpectedRate
                         + " but got: " + exchangeRateHeader.getTextContent());
@@ -55,5 +55,26 @@ class ExchangeRateTest extends AbstractStyleSheetTest {
         assertTrue(exchangeRateNoteHeader.getTextContent().contains(commonRateExpectedNote),
                 () -> "Expected common exchange rate note but got: " + exchangeRateNoteHeader.getTextContent());
         assertNull(firstRow, "Per-line exchange rate column must not be shown when all line rates are equal");
+    }
+
+    @Test
+    void shouldCorrectlyDisplayIncompleteLineRatesForVatInvoice() throws Exception {
+        URL input = resource("ExchangeRateTest/vat_incomplete_rates_in_rows.xml");
+
+        String firstRowExpectedRate = "4.3200";
+
+        Node exchangeRateHeader = transformFa3Invoice(input, INVOICE_XPATH, EXCHANGE_RATE_HEADER_XPATH);
+        Node exchangeRateNoteHeader = transformFa3Invoice(input, INVOICE_XPATH, EXCHANGE_RATE_NOTE_HEADER_XPATH);
+        Node firstRow = transformFa3Invoice(input, INVOICE_XPATH, FIRST_ROW_XPATH);
+
+        assertNull(exchangeRateHeader,
+                "Exchange rate header should not be visible when rows have incomplete rates");
+        assertNull(exchangeRateNoteHeader,
+                "Exchange rate header note should not be visible when rows have incomplete rates");
+
+        assertNotNull(firstRow,
+                "Exchange rate should be shown per line when rows have incomplete rates");
+        assertTrue(firstRow.getTextContent().contains(firstRowExpectedRate),
+                () -> "Expected line 1 exchange rate " + firstRowExpectedRate + " but got: " + firstRow.getTextContent());
     }
 }
