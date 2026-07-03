@@ -41,7 +41,7 @@ public class InvoicePdfConfig {
      * Creates a configuration with the specified footer and price formatting options.
      * The renderer pool size defaults to {@code 1}.
      *
-     * @deprecated Use {@link #builder()} instead.
+     * @deprecated Use {@code InvoicePdfConfig.builder()} instead.
      */
     @Deprecated
     public InvoicePdfConfig(boolean showFooter, boolean useExtendedPriceDecimalPlaces) {

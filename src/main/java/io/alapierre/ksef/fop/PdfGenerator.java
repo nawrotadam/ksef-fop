@@ -38,7 +38,7 @@ public class PdfGenerator {
     /**
      * Creates a generator from a repeatable classpath FOP configuration resource and invoice PDF options.
      *
-     * <p>This constructor supports {@link InvoicePdfConfig#getRendererPoolSize()} values greater than
+     * <p>This constructor supports {@code rendererPoolSize} values greater than
      * {@code 1}, because the configuration resource can be opened separately for each renderer.</p>
      *
      * @param fopConfig classpath location of the FOP configuration file
@@ -79,7 +79,7 @@ public class PdfGenerator {
      * Creates a generator from a one-shot FOP configuration stream and invoice PDF options.
      *
      * <p>A raw {@link InputStream} can only be consumed once. If
-     * {@link InvoicePdfConfig#getRendererPoolSize()} is greater than {@code 1}, construction fails with
+     * {@code rendererPoolSize} is greater than {@code 1}, construction fails with
      * {@link ConfigurationException}; use the classpath resource constructor for pooled rendering.</p>
      *
      * @param fopConfig stream containing the FOP configuration
