@@ -89,11 +89,14 @@ class ExchangeRateTest extends AbstractStyleSheetTest {
         String afterCorrectionRate = "4.2142";
 
         Node exchangeRateHeader = transformFa3Invoice(input, INVOICE_XPATH, EXCHANGE_RATE_HEADER_XPATH);
+        Node exchangeRateNoteHeader = transformFa3Invoice(input, INVOICE_XPATH, EXCHANGE_RATE_NOTE_HEADER_XPATH);
         Node firstRow = transformFa3Invoice(input, INVOICE_XPATH, FIRST_ROW_XPATH);
         Node secondRow = transformFa3Invoice(input, INVOICE_XPATH, SECOND_ROW_XPATH);
 
         assertNull(exchangeRateHeader,
                 "Common exchange rate should not be shown when the rate is corrected");
+        assertNull(exchangeRateNoteHeader,
+                "Common exchange rate note should not be shown when the rate is corrected");
         assertNotNull(firstRow,
                 "Exchange rate should be shown per line for a rate correction");
         assertTrue(firstRow.getTextContent().contains(beforeCorrectionRate),
