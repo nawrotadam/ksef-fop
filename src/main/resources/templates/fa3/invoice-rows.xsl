@@ -34,11 +34,16 @@
         <xsl:sequence select="count($rows) = count($rows/crd:KursWaluty) and local:distinctDecimalCount($rows/crd:KursWaluty) = 1"/>
     </xsl:function>
 
+    <xsl:function name="local:showCommonExchangeRateHeader" as="xs:boolean">
+        <xsl:param name="rows"/>
+        <xsl:sequence select="local:hasCommonExchangeRate($rows) and not($rows[crd:StanPrzed])"/>
+    </xsl:function>
+
     <!-- Template for rendering the positions table -->
     <xsl:template name="positionsTable">
         <xsl:param name="faWiersz"/>
 
-        <xsl:variable name="showExchangeRateColumn" select="boolean($faWiersz/crd:KursWaluty) and not(local:hasCommonExchangeRate($faWiersz))"/>
+        <xsl:variable name="showExchangeRateColumn" select="boolean($faWiersz/crd:KursWaluty) and not(local:hasCommonExchangeRate(//crd:FaWiersz))"/>
 
         <!-- Calculate column width for name based on presence of other columns -->
         <!-- Fixed columns: Lp (4%), Quantity (8%), Unit (5%) = 17% -->

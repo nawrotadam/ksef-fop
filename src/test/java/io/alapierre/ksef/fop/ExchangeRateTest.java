@@ -77,4 +77,41 @@ class ExchangeRateTest extends AbstractStyleSheetTest {
         assertTrue(firstRow.getTextContent().contains(firstRowExpectedRate),
                 () -> "Expected line 1 exchange rate " + firstRowExpectedRate + " but got: " + firstRow.getTextContent());
     }
+
+    @Test
+    void shouldCorrectlyDisplayCorrectedExchangeRates() throws Exception {
+        URL input = resource("faktury/fa3/korygujaca/FA_3_Przyklad_3.xml");
+
+        String beforeCorrectionRate = "4.2106";
+        String afterCorrectionRate = "4.2142";
+
+        Node exchangeRateHeader = transformFa3Invoice(input, INVOICE_XPATH, EXCHANGE_RATE_HEADER_XPATH);
+        Node firstRow = transformFa3Invoice(input, INVOICE_XPATH, FIRST_ROW_XPATH);
+        Node secondRow = transformFa3Invoice(input, INVOICE_XPATH, SECOND_ROW_XPATH);
+
+        assertNull(exchangeRateHeader,
+                "Common exchange rate should not be shown when the rate is corrected");
+        assertNotNull(firstRow,
+                "Exchange rate should be shown per line for a rate correction");
+        assertTrue(firstRow.getTextContent().contains(beforeCorrectionRate),
+                () -> "Expected before-correction rate " + beforeCorrectionRate + " but got: " + firstRow.getTextContent());
+        assertTrue(secondRow.getTextContent().contains(afterCorrectionRate),
+                () -> "Expected after-correction rate " + afterCorrectionRate + " but got: " + secondRow.getTextContent());
+    }
+
+    @Test
+    void shouldHideExchangeRateForCorrectionWithoutRateChange() throws Exception {
+        URL input = resource("ExchangeRateTest/correction_unchanged_rate.xml");
+
+        Node exchangeRateHeader = transformFa3Invoice(input, INVOICE_XPATH, EXCHANGE_RATE_HEADER_XPATH);
+        Node exchangeRateNoteHeader = transformFa3Invoice(input, INVOICE_XPATH, EXCHANGE_RATE_NOTE_HEADER_XPATH);
+        Node firstRow = transformFa3Invoice(input, INVOICE_XPATH, FIRST_ROW_XPATH);
+
+        assertNull(exchangeRateHeader,
+                "Common exchange rate header should not be shown on a correction that does not change the rate");
+        assertNull(exchangeRateNoteHeader,
+                "Common exchange rate note should not be shown on a correction that does not change the rate");
+        assertNull(firstRow,
+                "Per-line exchange rate column should not be shown on a correction that does not change the rate");
+    }
 }
