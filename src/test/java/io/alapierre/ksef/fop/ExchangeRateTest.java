@@ -8,6 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+/**
+ * Tests how the currency exchange rate ({@code crd:KursWaluty}) is visualized on FA(3) invoices.
+ */
 class ExchangeRateTest extends AbstractStyleSheetTest {
 
     private static final String INVOICE_XPATH = "/fa3:Faktura";
