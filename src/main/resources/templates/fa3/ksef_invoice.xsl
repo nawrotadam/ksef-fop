@@ -1747,6 +1747,9 @@
                     <!-- Adnotacje -->
                     <xsl:apply-templates select="crd:Fa/crd:Adnotacje"/>
 
+                    <!-- TP -->
+                    <xsl:apply-templates select="crd:Fa/crd:TP"/>
+
                     <!-- Dodatkowy opis-->
                     <xsl:if test="count(crd:Fa/crd:DodatkowyOpis) > 0">
                         <!-- Linia oddzielająca -->
@@ -2942,6 +2945,15 @@
             </xsl:if>
 
         </xsl:if>
+    </xsl:template>
+
+    <!-- TP -->
+    <xsl:template match="crd:TP">
+        <fo:block id="TP" font-size="7pt" text-align="left" space-after="2mm">
+            <fo:inline font-weight="bold">
+                <xsl:value-of select="key('kLabels', 'relatedEntities', $labels)"/>
+            </fo:inline>
+        </fo:block>
     </xsl:template>
 
     <!-- Podmiot upoważniony -->
