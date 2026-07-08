@@ -9,16 +9,16 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
- * Tests the visualization of {@code TP} element (existing links between the buyer and the supplier of goods or services) in the invoice XML.
+ * Tests the visualization of the "Additional information" invoice section.
  */
-class TpTemplateTest extends AbstractStyleSheetTest {
+class AdditionalInfoTemplateTest extends AbstractStyleSheetTest {
 
     private static final String INVOICE_XPATH = "/fa3:Faktura";
     private static final String TP_XPATH = "//fo:block[@id='TP']";
 
     @Test
     void shouldDisplayTpAnnotationWhenPresent() throws Exception {
-        URL input = resource("TpTemplateTest/tp_present.xml");
+        URL input = resource("AdditionalInfoTemplateTest/tp_present.xml");
 
         Node tp = transformFa3Invoice(input, INVOICE_XPATH, TP_XPATH);
 
@@ -28,7 +28,7 @@ class TpTemplateTest extends AbstractStyleSheetTest {
 
     @Test
     void shouldNotDisplayTpAnnotationWhenAbsent() throws Exception {
-        URL input = resource("TpTemplateTest/tp_absent.xml");
+        URL input = resource("AdditionalInfoTemplateTest/tp_absent.xml");
 
         Node tp = transformFa3Invoice(input, INVOICE_XPATH, TP_XPATH);
 
